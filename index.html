@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    #cursor {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const cursor = document.getElementById('cursor');
+
+    document.addEventListener('mousemove', (event) => {
+      const { clientX, clientY } = event;
+      cursor.style.left = `${clientX}px`;
+      cursor.style.top = `${clientY}px`;
+
+      socket.emit('mousemove', { x: clientX, y: clientY });
+    });
+
+    socket.on('moving', (data) => {
+      cursor.style.left = `${data.x}px`;
+      cursor.style.top = `${data.y}px`;
+    });
+  </script>
+</body>
+</html>
